@@ -10,7 +10,7 @@
 #include "blogic.h"
 #include "gen.h"
 
-#define UART_BAUD 9600
+#define UART_BAUD 115200
 
 #define csprintf(buff, format, ...) sprintf(buff + strlen(buff), format, ##__VA_ARGS__)
 

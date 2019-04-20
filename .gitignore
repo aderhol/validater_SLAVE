@@ -1,0 +1,8 @@
+validater_SLAVE/Debug/
+validater_SLAVE/src/
+
+*.obj
+*.d
+*.mk
+*.map
+*.out

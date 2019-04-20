@@ -38,6 +38,7 @@ Void echoFxn(UArg arg0, UArg arg1)
     while (1) {
         Semaphore_pend(sem, BIOS_WAIT_FOREVER);
         sendPacket(time);
+        GPIO_write(Board_LED3, 1);
     }
 }
 
@@ -56,6 +57,7 @@ int main(void)
     /* Call board init functions */
     Board_initGeneral();
     Board_initGPIO();
+    GPIO_write(Board_LED3, 0);
     Board_initUART();
 
     /* Construct BIOS objects */
