@@ -94,7 +94,7 @@ int genUsedGLONASSSatelliteList(int64_t time, int* PRN)
 
 double genAltitude(int64_t time)
 {
-    return sawtooth(time, 90, 60 *3, 100, 1500);
+    return sawtooth(time, 90, 60 * 3, 100, 1500);
 }
 
 double genUndulation(int64_t time)
