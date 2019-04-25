@@ -43,42 +43,44 @@ int genNumberOfSatellitesUsed(int64_t time)
     return genUsedGPSSatelliteList(time, PRN) + genUsedGLONASSSatelliteList(time, PRN);
 }
 
-double inViewRelMagic(int64_t time)
+double usedRelMagic(int64_t time)
 {
-    return sine(time, 0, 60*11, 30, -21);
+    return triangle(time, 0, 60*15, 23, 17);
 }
 
-#define SUM_A (16*60)
-#define SUM_N (20)
+#define SUM_A (5*50+3*70)
+#define SUM_N (12)
 
 int genGPSSatellitesInView(int64_t time, Satellite* satellites)
 {
-    int sum = (int)((SUM_A + SUM_N * inViewRelMagic(time)) / 2.0 + 0.5);
+    int sum = (int)((SUM_A + SUM_N * usedRelMagic(time)) / 2.0 + 0.5);
     const int numOfSat = 8;
-    int oneSNR = sum / numOfSat;
+    const int numUsed = 5;
+    int oneSNR = sum / numUsed;
     int i;
     for(i = 0; i < numOfSat; i++){
-        satellites[i].PRN = 12 + i;
+        satellites[i].PRN = (i < (numUsed - 2)) ? (10 + i) : (20 + i);
         satellites[i].elevation = 50 + i;
         satellites[i].azimuth = 100 + 10 * i + i;
-        satellites[i].used = (i < 5);
-        satellites[i].SNR = (i == 0) ? (oneSNR + (sum % numOfSat)) : (oneSNR);
+        satellites[i].used = (i < numUsed);
+        satellites[i].SNR = (i == 0) ? (oneSNR + (sum % numUsed)) : (oneSNR);
     }
     return numOfSat;    
 }
 
 int genGLONASSSatellitesInView(int64_t time, Satellite* satellites)
 {
-    int sum = (int)((SUM_A + SUM_N * inViewRelMagic(time)) / 2.0 + 0.5);
+    int sum = (int)((SUM_A + SUM_N * usedRelMagic(time)) / 2.0 + 0.5);
     const int numOfSat = 8;
-    int oneSNR = sum / numOfSat;
+    const int numUsed = 3;
+    int oneSNR = sum / numUsed;
     int i;
     for(i = 0; i < 10; i++){
-        satellites[i].PRN = 72 + i;
+        satellites[i].PRN = (i < (numUsed - 2)) ? (70 + i) : (80 + i);
         satellites[i].elevation = 30 + i;
         satellites[i].azimuth = 200 + 10 * i + i;
-        satellites[i].used = (i < 3);
-        satellites[i].SNR = (i == 0) ? (oneSNR + (sum % numOfSat)) : (oneSNR);
+        satellites[i].used = (i < numUsed);
+        satellites[i].SNR = (i == 0) ? (oneSNR + (sum % numUsed)) : (oneSNR);
     }     
     return numOfSat;    
 }
