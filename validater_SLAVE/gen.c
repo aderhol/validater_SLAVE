@@ -43,10 +43,20 @@ int genNumberOfSatellitesUsed(int64_t time)
     return genUsedGPSSatelliteList(time, PRN) + genUsedGLONASSSatelliteList(time, PRN);
 }
 
+int inView_magic(int64_t time)
+{
+    return (int)(square(time, 180, 60*6, 50, 4, 16) + 0.5);
+}
+
+int used_magic(int64_t time)
+{
+    return (int)(square(time, 0, 60*11, 20, 4, 7) + 0.5);
+}
+
 int genGPSSatellitesInView(int64_t time, Satellite* satellites)
 {
-    const int numOfSat = (int)(square(time, 90, 60*5, 33, 3, 13) + 0.5);
-    const int numOfUsed = (int)(square(time, 270, 60*7, 75, 4, 6) + 0.5);
+    const int numOfSat = (inView_magic(time) / 2) + (inView_magic(time) % 2);
+    const int numOfUsed = (used_magic(time) / 2) + (used_magic(time) % 2);
     int i;
     for(i = 0; i < numOfSat; i++){
         satellites[i].PRN = 10 + i;
@@ -60,8 +70,8 @@ int genGPSSatellitesInView(int64_t time, Satellite* satellites)
 
 int genGLONASSSatellitesInView(int64_t time, Satellite* satellites)
 {
-    const int numOfSat = (int)(triangle(time, 90, 60*5, 3, 13) + 0.5);
-    const int numOfUsed = (int)(triangle(time, 270, 60*7, 4, 6) + 0.5);
+    const int numOfSat = (inView_magic(time) / 2);
+    const int numOfUsed = (used_magic(time) / 2);
     int i;
     for(i = 0; i < numOfSat; i++){
         satellites[i].PRN = 70 + i;
