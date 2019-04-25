@@ -45,9 +45,6 @@ static void sendGLGSV(int64_t time);
 
 void sendPacket(int64_t time)
 {
-    if((time-60*5)%(60*30) == 0) //missing error
-        return;
-    
     sendGNRMC(time);
     sendGPGGA(time);
     sendGNGSA(time);
@@ -115,12 +112,7 @@ static void sendGNGSA(int64_t time)
 {
     char buffGPS[100] = "$GNGSA";
     csprintf(buffGPS, ",A");
-    if((time-60*5)%(60*16) == 0)
-        csprintf(buffGPS, ",2"); //2D fix
-    else if((time-60*5)%(60*10) == 0)
-        csprintf(buffGPS, ",1"); //no fix
-    else
-        csprintf(buffGPS, ",3"); //fix mode 3D
+    csprintf(buffGPS, ",3"); //fix mode 3D
     addUsedGPSSatellites(buffGPS, time);
     addPDOP2(buffGPS, time);
     addHDOP2(buffGPS, time);
@@ -129,12 +121,7 @@ static void sendGNGSA(int64_t time)
     
     char buffGLONASS[100] = "$GNGSA";
     csprintf(buffGLONASS, ",A");
-    if((time-60*5)%(60*16) == 0)
-        csprintf(buffGLONASS, ",2"); //2D fix
-    else if((time-60*5)%(60*10) == 0)
-        csprintf(buffGLONASS, ",1"); //no fix
-    else
-        csprintf(buffGLONASS, ",3"); //fix mode 3D
+    csprintf(buffGLONASS, ",3"); //fix mode 3D
     addUsedGLONASSSatellites(buffGLONASS, time);
     addPDOP2(buffGLONASS, time);
     addHDOP2(buffGLONASS, time);
@@ -165,10 +152,7 @@ static void sendGNRMC(int64_t time)
 {
     char buff[100] = "$GNRMC";
     addTime3(buff, time);
-    if((time-60*5)%(60*21)==0)
-        csprintf(buff, ",V"); //invalid
-    else
-        csprintf(buff, ",A");
+    csprintf(buff, ",A");
     addLatitude4(buff, time);
     addLatitudeDir(buff, time);
     addLongitude4(buff, time);
