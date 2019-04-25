@@ -43,44 +43,32 @@ int genNumberOfSatellitesUsed(int64_t time)
     return genUsedGPSSatelliteList(time, PRN) + genUsedGLONASSSatelliteList(time, PRN);
 }
 
-double usedRelMagic(int64_t time)
-{
-    return triangle(time, 0, 60*15, 23, 17);
-}
-
-#define SUM_A (5*50+3*70)
-#define SUM_N (12)
-
 int genGPSSatellitesInView(int64_t time, Satellite* satellites)
 {
-    int sum = (int)((SUM_A + SUM_N * usedRelMagic(time)) / 2.0 + 0.5);
-    const int numOfSat = 8;
-    const int numUsed = 5;
-    int oneSNR = sum / numUsed;
+    const int numOfSat = (int)(square(time, 90, 60*5, 33, 3, 13) + 0.5);
+    const int numOfUsed = (int)(square(time, 270, 60*7, 75, 4, 6) + 0.5);
     int i;
     for(i = 0; i < numOfSat; i++){
-        satellites[i].PRN = (i < (numUsed - 2)) ? (10 + i) : (20 + i);
+        satellites[i].PRN = 10 + i;
         satellites[i].elevation = 50 + i;
         satellites[i].azimuth = 100 + 10 * i + i;
-        satellites[i].used = (i < numUsed);
-        satellites[i].SNR = (i == 0) ? (oneSNR + (sum % numUsed)) : (oneSNR);
+        satellites[i].used = (i < numOfUsed);
+        satellites[i].SNR = 50;
     }
     return numOfSat;    
 }
 
 int genGLONASSSatellitesInView(int64_t time, Satellite* satellites)
 {
-    int sum = (int)((SUM_A + SUM_N * usedRelMagic(time)) / 2.0 + 0.5);
-    const int numOfSat = 8;
-    const int numUsed = 3;
-    int oneSNR = sum / numUsed;
+    const int numOfSat = (int)(triangle(time, 90, 60*5, 3, 13) + 0.5);
+    const int numOfUsed = (int)(triangle(time, 270, 60*7, 4, 6) + 0.5);
     int i;
-    for(i = 0; i < 10; i++){
-        satellites[i].PRN = (i < (numUsed - 2)) ? (70 + i) : (80 + i);
+    for(i = 0; i < numOfSat; i++){
+        satellites[i].PRN = 70 + i;
         satellites[i].elevation = 30 + i;
         satellites[i].azimuth = 200 + 10 * i + i;
-        satellites[i].used = (i < numUsed);
-        satellites[i].SNR = (i == 0) ? (oneSNR + (sum % numUsed)) : (oneSNR);
+        satellites[i].used = (i < numOfUsed);
+        satellites[i].SNR = 70;
     }     
     return numOfSat;    
 }

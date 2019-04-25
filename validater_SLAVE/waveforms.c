@@ -47,6 +47,6 @@ double square(int64_t t, double fi, double T, double D, double A, double off)
     if(tM >= 0)
         val = (tM < (T * (D / 100))) ? fabs(A) : -fabs(A);
     else
-        val = (fabs(tM) < (T * (D / 100)) - T) ? fabs(A) : -fabs(A);
+        val = ((T + tM) < (T * (D / 100))) ? fabs(A) : -fabs(A);
     return val + off;
 }
