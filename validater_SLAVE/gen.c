@@ -45,12 +45,16 @@ int genNumberOfSatellitesUsed(int64_t time)
 
 int inView_magic(int64_t time)
 {
-    return (int)(square(time, 180, 60*6, 50, 4, 16) + 0.5);
+    double x = square(time, 0, 60*6, 50, 4, 20);
+    double err = triangle(time, 0, 60*8, 15.0/100, 5.0/100);
+    return (int)(invRelErr(x, err) + 0.5);
 }
 
 int used_magic(int64_t time)
 {
-    return (int)(square(time, 0, 60*11, 20, 4, 7) + 0.5);
+    double x = square(time, 180, 60 * 11, 20, 3, 10);
+    double err = triangle(time, 0, 60 * 4, 30.0 / 100, -20.0 / 100);
+    return (int)(invRelErr(x, err) + 0.5);
 }
 
 int genGPSSatellitesInView(int64_t time, Satellite* satellites)
