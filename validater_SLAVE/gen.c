@@ -43,24 +43,16 @@ int genNumberOfSatellitesUsed(int64_t time)
     return genUsedGPSSatelliteList(time, PRN) + genUsedGLONASSSatelliteList(time, PRN);
 }
 
-int inView_magic(int64_t time)
-{
-    double x = square(time, 0, 60*6, 50, 4, 20);
-    double err = triangle(time, 0, 60*8, 15.0/100, 5.0/100);
-    return (int)(invRelErr(x, err) + 0.5);
-}
-
-int used_magic(int64_t time)
-{
-    double x = square(time, 180, 60 * 11, 20, 3, 10);
-    double err = triangle(time, 0, 60 * 4, 30.0 / 100, -20.0 / 100);
-    return (int)(invRelErr(x, err) + 0.5);
-}
-
 int genGPSSatellitesInView(int64_t time, Satellite* satellites)
 {
-    const int numOfSat = (inView_magic(time) / 2) + (inView_magic(time) % 2);
-    const int numOfUsed = (used_magic(time) / 2) + (used_magic(time) % 2);
+    const int numOfSat = (int)(invRelErr(sawtooth(time, 0, 60 * 11, 20, 25),
+                                         sine(time, 0, 60*17, 0.2, 0.1)
+                                         ) + 0.5);
+    const int numOfUsed = (int)(invRelErr(sawtooth(time, 0, 60 * 5, 4, 8),
+                                          sine(time, 0, 60*15, 0.3, 0.0)
+                                          ) + 0.5);
+    while(numOfSat > 36);
+    while(numOfUsed > 12);
     int i;
     for(i = 0; i < numOfSat; i++){
         satellites[i].PRN = 10 + i;
@@ -74,8 +66,14 @@ int genGPSSatellitesInView(int64_t time, Satellite* satellites)
 
 int genGLONASSSatellitesInView(int64_t time, Satellite* satellites)
 {
-    const int numOfSat = (inView_magic(time) / 2);
-    const int numOfUsed = (used_magic(time) / 2);
+    const int numOfSat = (int)(invRelErr(sawtooth(time, 0, 60 * 7, 21, 27),
+                                         sine(time, 0, 60*13, 0.15, 0.15)
+                                         ) + 0.5);
+    const int numOfUsed = (int)(invRelErr(sawtooth(time, 0, 60 * 13, 3, 8),
+                                          sine(time, 0, 60*18, 0.25, 0.12)
+                                          ) + 0.5);
+    while(numOfSat > 36);
+    while(numOfUsed > 12);
     int i;
     for(i = 0; i < numOfSat; i++){
         satellites[i].PRN = 70 + i;

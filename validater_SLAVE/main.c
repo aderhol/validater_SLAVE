@@ -32,18 +32,28 @@ Char task0Stack[TASKSTACKSIZE];
  *  Task for this function is created statically. See the project's .cfg file.
  */
 UART_Handle uart;
+#include <stdbool.h>
+static bool runIng = false;
 Semaphore_Handle sem;
 Void echoFxn(UArg arg0, UArg arg1)
 {
     while (1) {
         Semaphore_pend(sem, BIOS_WAIT_FOREVER);
+        runIng = true;
         sendPacket(time);
+        runIng = false;
         GPIO_write(Board_LED3, 1);
     }
 }
-
+extern void abort(void);
 Void syncFxn(unsigned int index)
 {
+    if(runIng)
+    {
+        GPIO_write(Board_LED3, 0);
+        abort();
+    }
+        
     time++;
     Semaphore_post(sem);
     GPIO_toggle(Board_LED0);
