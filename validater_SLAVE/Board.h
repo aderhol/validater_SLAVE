@@ -58,6 +58,10 @@ extern "C" {
 #define Board_LED1                  EK_TM4C1294XL_D2
 #define Board_LED3                  EK_TM4C1294XL_D4
 #define Board_sync                  EK_TM4C1294XL_sync
+#define Board_pps1                  EK_TM4C1294XL_pps1
+#define Board_pps2                  EK_TM4C1294XL_pps2
+#define Board_pps3                  EK_TM4C1294XL_pps3
+#define Board_pps4                  EK_TM4C1294XL_pps4
 #define Board_BUTTON0               EK_TM4C1294XL_USR_SW1
 #define Board_BUTTON1               EK_TM4C1294XL_USR_SW2
 

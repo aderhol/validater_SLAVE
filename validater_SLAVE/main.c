@@ -39,6 +39,10 @@ Void echoFxn(UArg arg0, UArg arg1)
         Semaphore_pend(sem, BIOS_WAIT_FOREVER);
         sendPacket(time);
         GPIO_write(Board_LED3, 1);
+        GPIO_write(Board_pps1, 0);
+        GPIO_write(Board_pps2, 0);
+        GPIO_write(Board_pps3, 0);
+        GPIO_write(Board_pps4, 0);
     }
 }
 
@@ -47,6 +51,10 @@ Void syncFxn(unsigned int index)
     time++;
     Semaphore_post(sem);
     GPIO_toggle(Board_LED0);
+    GPIO_write(Board_pps1, 1);
+    GPIO_write(Board_pps2, 1);
+    GPIO_write(Board_pps3, 1);
+    GPIO_write(Board_pps4, 1);
 }
 
 /*
